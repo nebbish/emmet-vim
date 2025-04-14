@@ -31,6 +31,8 @@ function! emmet#lang#sass#toString(settings, current, type, inline, filters, ite
         let str .= '#' . val
       elseif attr ==# 'class'
         let str .= '.' . val
+      elseif attr ==# 'key'
+        let str .= '&' . val
       else
         let tmp .= attr . ': ' . val
       endif

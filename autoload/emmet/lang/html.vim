@@ -7,6 +7,7 @@ let s:mx = '\([+>]\|[<^]\+\)\{-}'
 \           .'\%(#{[{}a-zA-Z0-9_\-\$]\+\|#[a-zA-Z0-9_\-\$]\+\)'
 \           .'\|\%(\[\%(\[[^\]]*\]\|"[^"]*"\|[^"\[\]]*\)\+\]\)'
 \           .'\|\%(\.{[{}a-zA-Z0-9_\-\$\.]\+\|\.[a-zA-Z0-9_\-\$]\+\)'
+\           .'\|\%(&{[{}a-zA-Z0-9_\-\$]\+\|&[a-zA-Z0-9_\-\$]\+\)'
 \         .'\)*'
 \       .'\)'
 \       .'\%(\(' . s:bx . '\+\)\)\{0,1}'
@@ -281,7 +282,12 @@ function! emmet#lang#html#parseIntoTree(abbr, type) abort
     if len(attributes)
       let attr = attributes
       while len(attr)
-        let item = matchstr(attr, '\(\%(\%(#[{}a-zA-Z0-9_\-\$]\+\)\|\%(\[\%(\[[^\]]*\]\|"[^"]*"\|[^"\[\]]*\)\+\]\)\|\%(\.[{}a-zA-Z0-9_\-\$]\+\)*\)\)')
+        let item = matchstr(attr, '\(\%('
+                        \.'\%(#[{}a-zA-Z0-9_\-\$]\+\)'
+                        \.'\|\%(&[{}a-zA-Z0-9_\-\$]\+\)'
+                        \.'\|\%(\[\%(\[[^\]]*\]\|"[^"]*"\|[^"\[\]]*\)\+\]\)'
+                        \.'\|\%(\.[{}a-zA-Z0-9_\-\$]\+\)*'
+                    \.'\)\)')
         if g:emmet_debug > 1
           echomsg 'attr=' . item
         endif
@@ -295,6 +301,10 @@ function! emmet#lang#html#parseIntoTree(abbr, type) abort
         if item[0] ==# '.'
           let current.attr.class = substitute(item[1:], '\.', ' ', 'g')
           let root['variables']['class'] = current.attr.class
+        endif
+        if item[0] ==# '&'
+          let current.attr.key = item[1:]
+          let root['variables']['key'] = current.attr.key
         endif
         if item[0] ==# '['
           let atts = item[1:-2]
@@ -534,6 +544,7 @@ function! emmet#lang#html#toString(settings, current, type, inline, filters, ite
       if emmet#useFilter(filters, 'c')
         if attr ==# 'id' | let comment .= '#' . Val | endif
         if attr ==# 'class' | let comment .= '.' . Val | endif
+        if attr ==# 'key' | let comment .= '&' . Val | endif
       endif
     else
       if dollar_expr
@@ -598,6 +609,7 @@ function! emmet#lang#html#toString(settings, current, type, inline, filters, ite
       if emmet#useFilter(filters, 'c')
         if attr ==# 'id' | let comment .= '#' . Val | endif
         if attr ==# 'class' | let comment .= '.' . Val | endif
+        if attr ==# 'key' | let comment .= '&' . Val | endif
       endif
     endif
     unlet Val

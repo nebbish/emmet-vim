@@ -671,16 +671,18 @@ inside generated tree and elements' attributes.
   Operator   Description                 Link ~
   .          Attribute 'class'             |emmet-.|
   #          Attribute 'id'                |emmet-#|
+  &          Attribute 'key'               |emmet-&|
   []         Custom attributes             |emmet-[]|
   $          Number                        |emmet-$|
   @          Number origin and direction   |emmet-@|
 
-3.1. ID and CLASS                                          *emmet-.* *emmet-#*
+3.1. ID and CLASS and KEY                        *emmet-.* *emmet-#* *emmet-&*
 
   In CSS, you use 'elem#id' and 'elem.class' notation to reach the elements
   with specified 'id' or 'class' attributes.
   In Emmet, you can use the very same syntax to add these attributes
   to specified element:
+  For 'key' attributes, '&' is invented for emmet.
 >
   span.class1          ->   <span class="class1"></span>
   span.class1.class2   ->   <span class="class1 class2"></span>

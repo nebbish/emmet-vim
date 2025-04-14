@@ -48,6 +48,8 @@ function! emmet#lang#haml#toString(settings, current, type, inline, filters, ite
           let str .= '#' . Val
         elseif attr ==# 'class' && len(valtmp) > 0
           let str .= '.' . substitute(Val, ' ', '.', 'g')
+        elseif attr ==# 'key' && len(valtmp) > 0
+          let str .= '&' . Val
         else
           if len(tmp) > 0 
             if attribute_style ==# 'hash'
